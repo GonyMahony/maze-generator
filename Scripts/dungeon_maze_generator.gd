@@ -8,6 +8,7 @@ var current
 var steps = 0
 @export var chance_to_branch = 0.2
 var start_room
+var start_branches = []
 var rooms = []
 var walls = []
 var dead_ends = []
@@ -99,7 +100,8 @@ func _init_maze(mx: int, my: int) -> void:
 	dead_ends.clear()
 	steps = initial_steps
 	maze = Grid.new(mx, my)
-	start_room = maze.get_cell(randi() % size_x, randi() % size_y) #start with random cell
+	#start with random cell away from borders
+	init_start_room()
 	current = start_room
 
 func generate_map():
@@ -117,6 +119,7 @@ func generate_map():
 		if dead_ends.size() >= 3:
 			spread_rooms()
 			break
+
 
 
 func map_step():
@@ -155,9 +158,18 @@ func map_step():
 	
 	var last_room = rooms[rooms.size() -1]
 	make_walls(last_room)
-	
-	find_dead_ends()
 
+
+
+func init_start_room(): #choose a random start room and add 4 neighbors as rooms to it
+	start_room = maze.get_cell((randi() % size_x -2)+1, (randi() % size_y -2)+1)
+	start_room.type = tile_type.ROOM #make it a room until the end
+	for n in get_node_neighbors(start_room):
+		rooms.append(n)
+		start_branches.append(n)
+		n.type = tile_type.ROOM
+		n.visited = true
+		make_walls(n)
 
 func make_walls(node: Grid_Node):
 	var neighbors = get_node_neighbors(node)
@@ -180,6 +192,9 @@ func find_branchable_nodes():
 		if amount_rooms == 1: #if there is exactly 1 adjacent room
 			branchable_nodes.append(w) #add it to the branchable_rooms
 		amount_rooms = 0
+	for b in start_branches:
+		if !b.visited:
+			branchable_nodes.append(b)
 	return branchable_nodes
 
 
@@ -211,10 +226,15 @@ func get_room_neighbors(node: Grid_Node) -> Array:
 
 
 func spread_rooms():
-	dead_ends[0].type = tile_type.BOSS
-	#remove from rooms?
-	dead_ends[1].type = tile_type.ITEM
-	dead_ends[2].type = tile_type.SHOP
+	dead_ends[0].type = tile_type.BOSS #0 is already the furthest so remove it
+	dead_ends.remove_at(0) #remove from rooms
+	
+	var i = randi_range(0, dead_ends.size()-1)
+	dead_ends[i].type = tile_type.ITEM
+	dead_ends.remove_at(i)
+	
+	i = randi_range(0, dead_ends.size()-1)
+	dead_ends[i].type = tile_type.SHOP
 	start_room.type = tile_type.START
 
 func find_dead_ends():
