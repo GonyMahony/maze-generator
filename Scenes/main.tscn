@@ -4,6 +4,5 @@
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_jjgbg")
-steps = 70
 size_x = 15
 size_y = 15
