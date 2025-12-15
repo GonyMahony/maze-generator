@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdrbwifh4y0fs"]
+
+[ext_resource type="Script" uid="uid://bu0xyfsdg2g1u" path="res://Scripts/maze_generator_4 real.gd" id="1_jjgbg"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_jjgbg")
+size_x = 10
+size_y = 10

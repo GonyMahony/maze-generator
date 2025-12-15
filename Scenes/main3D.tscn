@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://da72xwxjm7q0g"]
+
+[ext_resource type="Script" uid="uid://bu0xyfsdg2g1u" path="res://Scripts/maze_generator_4 real.gd" id="1_xjw7k"]
+[ext_resource type="PackedScene" uid="uid://cdk6hwb4hi2wc" path="res://Scenes/player.tscn" id="2_ijj6y"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bo1nx"]
+
+[sub_resource type="Sky" id="Sky_edr0k"]
+sky_material = SubResource("ProceduralSkyMaterial_bo1nx")
+
+[sub_resource type="Environment" id="Environment_8gbba"]
+background_mode = 2
+sky = SubResource("Sky_edr0k")
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_xjw7k")
+steps = 10000
+size_x = 10
+size_y = 10
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8gbba")
+
+[node name="DirectionalLight3d" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(-0.678961, 0.262875, -0.685499, -0.027831, 0.923814, 0.38183, 0.733646, 0.278326, -0.619918, 0, 6.83834, 0)
+shadow_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("2_ijj6y")]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(719.7523, 0, 0, 0, 1, 0, 0, 0, 1094.9138, 290.283, -0.005264282, -468.74722)
+use_collision = true
